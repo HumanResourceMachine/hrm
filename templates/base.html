@@ -25,26 +25,13 @@
     <link rel="stylesheet" href="/static/plugins/bootstrap-wysihtml5/bootstrap3-wysihtml5.min.css">
     <!-- Google Font: Source Sans Pro -->
     <link href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,700" rel="stylesheet">
-    {% block head %}
+    {% block stylesheets %}
     {% endblock %}
 </head>
 <body  class="hold-transition sidebar-mini">
 
 {% csrf_token %}
-    <script>
-        var csrftoken = jQuery("[name=csrfmiddlewaretoken]").val();
-        function csrfSafeMethod(method) {
-            // these HTTP methods do not require CSRF protection
-            return (/^(GET|HEAD|OPTIONS|TRACE)$/.test(method));
-        }
-        $.ajaxSetup({
-            beforeSend: function(xhr, settings) {
-                if (!csrfSafeMethod(settings.type) && !this.crossDomain) {
-                    xhr.setRequestHeader("X-CSRFToken", csrftoken);
-                }
-            }
-        });
-    </script>
+
 
 <div class="wrapper">
 <!-- Navbar -->
@@ -171,8 +158,7 @@
 <!-- ./wrapper -->
 
 
-{% block body %}
-{% endblock %}
+
     <!-- jQuery -->
     <script src="/static/plugins/jquery/jquery.min.js"></script>
     <!-- jQuery UI 1.11.4 -->
@@ -205,7 +191,22 @@
     <!-- FastClick -->
     <script src="/static/plugins/fastclick/fastclick.js"></script>
     <!-- AdminLTE App -->
-    <script src="/static/plugins/adminlte/adminlte.js"></script>
-
+    <script src="/static/plugins/adminlte/adminlte.min.js"></script>
+    <script>
+        var csrftoken = $("[name=csrfmiddlewaretoken]").val();
+        function csrfSafeMethod(method) {
+            // these HTTP methods do not require CSRF protection
+            return (/^(GET|HEAD|OPTIONS|TRACE)$/.test(method));
+        }
+        $.ajaxSetup({
+            beforeSend: function(xhr, settings) {
+                if (!csrfSafeMethod(settings.type) && !this.crossDomain) {
+                    xhr.setRequestHeader("X-CSRFToken", csrftoken);
+                }
+            }
+        });
+    </script>
+{% block scripts %}
+{% endblock %}
 </body>
 </html>
