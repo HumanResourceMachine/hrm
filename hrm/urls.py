@@ -18,8 +18,17 @@ from django.conf import settings
 import frontend.views1, frontend.views2, frontend.views3, backend.views
 import frontend.urls1, frontend.urls2, frontend.urls3
 from django.conf.urls.static import static
+from backend import views as backend_views
+from django.contrib import admin
+from django.conf.urls import include, url
+
+
+
+
+
 
 urlpatterns = [
+
 ]\
 + frontend.urls1.urlpatterns\
 + frontend.urls2.urlpatterns\
