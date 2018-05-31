@@ -1,10 +1,61 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Title</title>
-</head>
-<body>
+{% extends "base.html" %}
 
-</body>
-</html>
+{% block title %}Applicant View Job Information{% endblock %}
+
+{% block stylesheets %}{% endblock %}
+
+{% block scripts %}
+{% endblock %}
+
+{% block header%}Human Resource Comany{% endblock %}
+
+{% block container %}
+
+      <div class="card">
+          <div class="card-header">
+            <h3 class="card-title">All categories</h3>
+          </div>
+          <!-- /.card-header -->
+          <div class="card-body">
+            <table class="table table-bordered">
+              <tbody><tr>
+                <th style="width: 10px">Job Name</th>
+                <th>Description</th>
+                <th style="width: 40px">Label</th>
+              </tr>
+              <tr>
+                <td>Development Engineer</td>
+                <td>Develope Product</td>
+                <td>
+                  <button type="button" class="btn btn-block btn-primary">Apply</button>
+                </td>
+
+              </tr>
+              <tr>
+                <td>Test Engineer</td>
+                <td>Test Function</td>
+                <td>
+                  <button type="button" class="btn btn-block btn-primary">Apply</button>
+                </td>
+              </tr>
+              <tr>
+                <td>Algorithm Engineer</td>
+                <td>Design Algorithm</td>
+                <td>
+                  <button type="button" class="btn btn-block btn-primary">Apply</button>
+                </td>
+
+            </tbody></table>
+          </div>
+          <!-- /.card-body -->
+          <div class="card-footer clearfix">
+            <ul class="pagination pagination-sm m-0 float-right">
+              <li class="page-item"><a class="page-link" href="#">«</a></li>
+              <li class="page-item"><a class="page-link" href="#">1</a></li>
+              <li class="page-item"><a class="page-link" href="#">2</a></li>
+              <li class="page-item"><a class="page-link" href="#">3</a></li>
+              <li class="page-item"><a class="page-link" href="#">»</a></li>
+            </ul>
+          </div>
+      </div>
+{% endblock %}
