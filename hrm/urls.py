@@ -28,6 +28,7 @@ from django.conf.urls import include, url
 
 
 urlpatterns = [
+
 ]\
 + frontend.urls1.urlpatterns\
 + frontend.urls2.urlpatterns\
