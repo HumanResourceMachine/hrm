@@ -4,4 +4,4 @@ from django.http import JsonResponse
 # Create your views here.
 
 def test(request):
-    return JsonResponse({"123":"456"})
+    return render(request, "test.html")
