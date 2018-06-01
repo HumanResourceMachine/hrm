@@ -1,7 +1,9 @@
 $(function() {
-    $("#submit").submit(function() {
+    //alert('ok');
+    $("#submit").click(function() {
         $.ajax({
-            url: "/users",
+            //------------注意：url最后要改成接口文件中定义的-------------
+            url: "/test/register",
             type: "POST",
             data: {
                 "username": $("#username").val(),
@@ -10,7 +12,10 @@ $(function() {
             },
             success: function(data) {
                 if (data["verdict"]==="error") {
-                    alert(message);
+                    alert(data["message"]);
+                } else {
+                    alert('Registration successful!')
+                    window.location.href = "/login";
                 }
             },
             error: function() {
