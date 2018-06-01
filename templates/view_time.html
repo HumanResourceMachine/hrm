@@ -1,0 +1,37 @@
+{% extends "base.html" %}
+
+{% block title %}查看面试时间{% endblock %}
+
+{% block stylesheets %}
+    <!-- fullCalendar 2.2.5-->
+    <link rel="stylesheet" href="/static/plugins/fullcalendar/fullcalendar.min.css">
+    <link rel="stylesheet" href="/static/plugins/fullcalendar/fullcalendar.print.css" media="print">
+{% endblock %}
+
+{% block scripts %}
+    <script src="/static/view_time.js"></script>
+    <!-- fullCalendar 2.2.5 -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.10.2/moment.min.js"></script>
+    <script src="/static/plugins/fullcalendar/fullcalendar.min.js"></script>
+{% endblock %}
+
+{% block header%}查看面试时间{% endblock %}
+
+{% block container %}
+    <div class="container-fluid">
+        <div class="row">
+            <!-- /.col -->
+            <div class="col-md-9">
+                <div class="card card-primary">
+                    <div class="card-body p-0">
+                        <!-- THE CALENDAR -->
+                        <div id="calendar"></div>
+                    </div>
+                    <!-- /.card-body -->
+                </div>
+                <!-- /. box -->
+            </div>
+            <!-- /.col -->
+        </div>
+    </div><!-- /.container-fluid -->
+{% endblock %}
