@@ -60,3 +60,10 @@ def interview_status(request):
         ]
     }
     return JsonResponse(res)
+
+def users(request):
+    res = {
+        "username": "Yanmei Han",
+        "role": "2",
+    }
+    return JsonResponse(res)
