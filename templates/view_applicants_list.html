@@ -35,7 +35,7 @@
                 <input type="text" value="{interviewer}"/>
             </td>
             <td>
-                <input type="text" value="{date}" id="interview_date"/>
+                <input type="text" value="{date}" class="interview_date"/>
             </td>
             <td>
                 <a class="btn btn-sm">
@@ -117,11 +117,19 @@
                             }
                         ]
                     });
-
+                $('.interview_date').each(function(e){
+                    //console.log(this);
+                    $(this).datepicker({
+	                 autoclose: true,
+                    format : "yyyy-mm-dd"
+	                });
+                });
+                /*
                  $('#interview_date').datepicker({
 	                 autoclose: true,
                     format : "yyyy-mm-dd"
 	                });
+                */
                 }
             });
 
