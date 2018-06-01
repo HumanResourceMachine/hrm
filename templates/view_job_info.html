@@ -5,6 +5,7 @@
 {% block stylesheets %}{% endblock %}
 
 {% block scripts %}
+    <script src="/static/view_job_info.js"></script>
 {% endblock %}
 
 {% block header%}Human Resource Comany{% endblock %}
@@ -18,7 +19,8 @@
           <!-- /.card-header -->
           <div class="card-body">
             <table class="table table-bordered">
-              <tbody><tr>
+              <tbody id="tbody_job_info">
+              <tr>
                 <th style="width: 10px">Job Name</th>
                 <th>Description</th>
                 <th style="width: 40px">Label</th>

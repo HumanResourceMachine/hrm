@@ -1,18 +1,29 @@
 {% extends "base.html" %}
 
-{% block title %}这是个Test页面{% endblock %}
+{% block title %}View my status of applicants{% endblock %}
 
 {% block stylesheets %}{% endblock %}
 
-{% block scripts %}<script src="/static/view_status.js"></script>
+{% block scripts %}
+    <script src="/static/plugins/go.js"></script>
+    <script src="/static/view_status.js"></script>
 {% endblock %}
 
-{% block header%}修改面试时间{% endblock %}
+{% block header%}View staus of applicants{% endblock %}
 
 {% block container %}
-
-      <div class="container-fluid">
-
-
-      </div><!-- /.container-fluid -->
+    <div class="container-fluid">
+        <div class="col-md-6">
+            <!-- form start -->
+            <form role="form">
+                <div class="form-group">
+                    <label for="job-list">Position</label>
+                    <select class="form-control" id="job-list">
+                        <option value="123">Google SDE</option>
+                    </select>
+                </div>
+            </form>
+        </div>
+        <div class="col-md-6" id="status" style="height:400px;"></div>
+    </div><!-- /.container-fluid -->
 {% endblock %}

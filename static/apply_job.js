@@ -1,8 +1,7 @@
 $(function() {
-    //alert('ok');
+    alert('ok');
     $("#submit").click(function() {
         $.ajax({
-            //------------注意：url最后要改成接口文件中定义的-------------
             url: "/test/login",
             type: "POST",
             data: {
