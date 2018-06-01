@@ -1,16 +1,20 @@
 {% extends "base.html" %}
 
-{% block title %}这是个Test页面{% endblock %}
+{% block title %}View Resume{% endblock %}
 
 {% block stylesheets %}{% endblock %}
 
-{% block scripts %}<script src="/static/view_applicants.js"></script>
+{% block scripts %}
+    <script src="/static/plugins/pdfobject.min.js"></script>
+    <script src="/static/view_applicants.js"></script>
 {% endblock %}
 
-{% block header%}修改面试时间{% endblock %}
+{% block header%}View Resume{% endblock %}
 
 {% block container %}
       <div class="container-fluid">
+          <div class="col-md-12" style="height:700px;" id="resume">
 
+          </div>
       </div><!-- /.container-fluid -->
 {% endblock %}

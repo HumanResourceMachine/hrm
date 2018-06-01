@@ -1,8 +1,4 @@
-$(function() {
-
-    $.ajax({
-
-    });
+function init_calendar(data) {
     /* initialize the calendar
      -----------------------------------------------------------------*/
     //Date for the calendar events (dummy data)
@@ -23,13 +19,40 @@ $(function() {
             day: 'day'
         },
         //Random default events
-        events: [
-            {
-                title: 'All Day Event',
-                start: new Date(y, m, 1),
-                backgroundColor: '#f56954', //red
-                borderColor: '#f56954' //red
-            },
+        events: data,
+        editable: true,
+        droppable: true, // this allows things to be dropped onto the calendar !!!
+        drop: function (date, allDay) { // this function is called when something is dropped
+
+            // retrieve the dropped element's stored Event Object
+            var originalEventObject = $(this).data('eventObject');
+
+            // we need to copy it, so that multiple events don't have a reference to the same object
+            var copiedEventObject = $.extend({}, originalEventObject);
+
+            // assign it the date that was reported
+            copiedEventObject.start = date;
+            copiedEventObject.allDay = allDay;
+            copiedEventObject.backgroundColor = $(this).css('background-color');
+            copiedEventObject.borderColor = $(this).css('border-color');
+
+            // render the event on the calendar
+            // the last `true` argument determines if the event "sticks" (http://arshaw.com/fullcalendar/docs/event_rendering/renderEvent/)
+            $('#calendar').fullCalendar('renderEvent', copiedEventObject, true);
+
+            // is the "remove after drop" checkbox checked?
+            if ($('#drop-remove').is(':checked')) {
+                // if so, remove the element from the "Draggable Events" list
+                $(this).remove()
+            }
+
+        }
+    });
+}
+$(function() {
+    /*
+    [
+
             {
                 title: 'Long Event',
                 start: new Date(y, m, d - 5),
@@ -68,35 +91,32 @@ $(function() {
                 backgroundColor: '#3c8dbc', //Primary (light-blue)
                 borderColor: '#3c8dbc' //Primary (light-blue)
             }
-        ],
-        editable: true,
-        droppable: true, // this allows things to be dropped onto the calendar !!!
-        drop: function (date, allDay) { // this function is called when something is dropped
-
-            // retrieve the dropped element's stored Event Object
-            var originalEventObject = $(this).data('eventObject');
-
-            // we need to copy it, so that multiple events don't have a reference to the same object
-            var copiedEventObject = $.extend({}, originalEventObject);
-
-            // assign it the date that was reported
-            copiedEventObject.start = date;
-            copiedEventObject.allDay = allDay;
-            copiedEventObject.backgroundColor = $(this).css('background-color');
-            copiedEventObject.borderColor = $(this).css('border-color');
-
-            // render the event on the calendar
-            // the last `true` argument determines if the event "sticks" (http://arshaw.com/fullcalendar/docs/event_rendering/renderEvent/)
-            $('#calendar').fullCalendar('renderEvent', copiedEventObject, true);
-
-            // is the "remove after drop" checkbox checked?
-            if ($('#drop-remove').is(':checked')) {
-                // if so, remove the element from the "Draggable Events" list
-                $(this).remove()
+        ]
+                {
+                title: 'All Day Event',
+                start: new Date(y, m, 1),
+                backgroundColor: '#f56954', //red
+                borderColor: '#f56954' //red
+            },
+     */
+    $.ajax({
+        url: "/test/interview/time",
+        type: "GET",
+        success: function(data) {
+            data = data["interviews"];
+            var time = new Array();
+            for (var i in data) {
+                var event = {};
+                event["title"] = data[i]["job_title"];
+                var date = data[i]["date"];
+                console.log(date);
+                event["start"] = new Date(date[0], date[1], date[2]);
+                event["backgroundColor"] = '#3c8dbc';
+                event["allDay"] = true;
+                time.push(event);
             }
-
+            console.log(time);
+            init_calendar(time);
         }
     });
-
-
 });

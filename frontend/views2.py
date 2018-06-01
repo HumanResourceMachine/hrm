@@ -17,3 +17,46 @@ def view_applicants(request):
 
 def view_status(request):
     return  render(request, "view_status.html")
+
+def interview_time(request):
+    if request.method == "GET":
+        res = {
+            "interviews":[
+                {
+                    "job_title": "Google SDE",
+                    "date": [
+                        2018,
+                        6,
+                        3
+                    ]
+                },
+                {
+                    "job_title": "Amazon SDE",
+                    "date": [
+                        2018,
+                        6,
+                        20
+                    ]
+                }
+            ]
+        }
+    else:
+        res = {
+            "verdict": "ok"
+        }
+    return JsonResponse(res)
+
+def interview_status(request):
+    res = {
+        "interviews": [
+            {
+                "job_title": "Google SDE",
+                "status": -4
+            },
+            {
+                "job_title": "HP SDE",
+                "status": "4"
+            }
+        ]
+    }
+    return JsonResponse(res)

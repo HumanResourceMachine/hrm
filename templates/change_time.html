@@ -1,17 +1,58 @@
 {% extends "base.html" %}
 
-{% block title %}修改面试时间{% endblock %}
+{% block title %}Change the Interview Time{% endblock %}
 
-{% block stylesheets %}{% endblock %}
-
-{% block scripts %}<script src="/static/change_time.js"></script>
+{% block stylesheets %}
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/tempusdominus-bootstrap-4/5.0.0-alpha14/css/tempusdominus-bootstrap-4.min.css" />
 {% endblock %}
 
-{% block header%}修改面试时间{% endblock %}
+{% block scripts %}
+    <script src="/static/plugins/moment.js"></script>
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/tempusdominus-bootstrap-4/5.0.0-alpha14/js/tempusdominus-bootstrap-4.min.js"></script>
+    <script src="/static/change_time.js"></script>
+{% endblock %}
+
+{% block header%}Change the Interview Time{% endblock %}
 
 {% block container %}
 
-      <div class="container-fluid">
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-md-6">
+                <!-- general form elements -->
+                <div class="card card-primary">
+                    <div class="card-header">
+                        <h3 class="card-title"></h3>
+                    </div>
+                    <!-- /.card-header -->
+                    <!-- form start -->
+                    <form role="form">
+                        <div class="card-body">
+                            <div class="form-group">
+                                <label for="ee_id">Interviewer Name</label>
+                                <select class="form-control" id="ee_id">
+                                    <option value="123">Yukun Ma</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label for="datetimepicker">New Interview Time</label>
+                                <div class="input-group date" id="datetimepicker" data-target-input="nearest">
+                                    <input type="text" class="form-control datetimepicker-input" data-target="#datetimepicker"/>
+                                    <div class="input-group-append" data-target="#datetimepicker" data-toggle="datetimepicker">
+                                        <div class="input-group-text"><i class="fa fa-calendar"></i></div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- /.card-body -->
 
-      </div><!-- /.container-fluid -->
+                        <div class="card-footer">
+                            <button type="submit" class="btn btn-primary">Submit</button>
+                        </div>
+                    </form>
+                </div>
+                <!-- /.card -->
+            </div>
+        </div>
+    </div><!-- /.container-fluid -->
 {% endblock %}
