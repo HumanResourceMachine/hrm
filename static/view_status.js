@@ -29,13 +29,13 @@ function init() {
             { key: "1st Technical Phone Interview", color: "lightgreen" },
             { key: "2nd Technical Phone Interview", color: "lightgreen" },
             { key: "Hiring Committee Review", color: "red" },
-            { key: "Offer Received", color: "white" }
+            { key: "Offer Stage", color: "white" }
         ],
         [
             { from: "Resume Submitted", to: "1st Technical Phone Interview" },
             { from: "1st Technical Phone Interview", to: "2nd Technical Phone Interview" },
             { from: "2nd Technical Phone Interview", to: "Hiring Committee Review" },
-            { from: "Hiring Committee Review", to: "Offer Received" }
+            { from: "Hiring Committee Review", to: "Offer Stage" }
         ]);
 }
 $(function() {
@@ -44,8 +44,10 @@ $(function() {
         url: "/test/interview/status",
         type: "GET",
         success: function(data) {
+            data = data["interviews"];
             for (var i in data) {
                 var job = data[i];
+                console.log(job);
                 $("#job-list").append($("<option></option>").html(job["job_title"]));
             }
         }
