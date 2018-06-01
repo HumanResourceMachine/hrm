@@ -30,10 +30,12 @@ class play(models.Model):
 
 
 class interview(models.Model):
+    interview_id= models.IntegerField(primary_key=True, db_column='FId')
     ee_id=models.ForeignKey(interviewee,on_delete=models.CASCADE)
     er_id=models.ForeignKey(interviewer,on_delete=models.CASCADE)
     date = models.DateTimeField(default = timezone.now)
     feedback= models.CharField(max_length=500,default='?')
+    status=models.IntegerField(max_length=10,default=0)
 
 class position(models.Model):
     position_id= models.IntegerField(primary_key=True, db_column='FId')
