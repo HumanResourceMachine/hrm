@@ -1,3 +1,4 @@
+from django.views.decorators.csrf import csrf_exempt
 from django.shortcuts import render
 from django.http import JsonResponse
 from backend.models import users,interviewer,interviewee,hr,play,interview,position,apply
@@ -13,11 +14,12 @@ from email.utils import formataddr
 import urllib.request
 
 
-@csrf_protect
+@csrf_exempt
 #新建用户 get用户信息
 def user(request):
     result = {'verdict': 'ok', 'message': 'successful!'}
     if request.method == 'POST':
+        print(request.POST)
         username = request.POST['username']
         password = request.POST['password']
         email = request.POST['email']
@@ -29,19 +31,20 @@ def user(request):
         result['username'] = username
         #return JsonResponse(result)
         userinfo = users.objects.filter(Q(email = email)|Q(username = username))
+        print (userinfo)
         if userinfo:
             result['verdict'] = 'error'
             result['message'] = 'The email or username already exits!'
         else:
-            user = users(username = username , password = password ,email = email ,friendnum = 0)
+            user = users(username = username , password = password ,email = email)
+
+            iner = interviewer.objects.create()
+            inee =interviewee.objects.create()
+            ihr =hr.objects.create()
             user.save()
-            interviewer = interviewer()
-            interviewer.save()
-            interviewee =interviewee()
-            interviewee.save()
-            hr = hr()
-            hr.save()
-            play=play(user=user,er_id=interviewer,ee_id=interviewee,hr_id=hr)
+            print(iner.er_id)
+            play.objects.create(user=user,er_id=iner,ee_id=inee,hr_id=ihr)
+
         return JsonResponse(result)
     else :
         username = request.session.get('username','')
@@ -57,29 +60,30 @@ def user(request):
         return JsonResponse(result)
 
 #登录
+@csrf_exempt
 def login(request):
-    username = request.POST['username']
-    password = request.POST['password']
-    role = request.POST['role']
-    username = str(username)
-    password = str(password)
-    result = {'verdict': 'ok', 'message': 'successful'}
-    userinfo = users.objects.filter(username = username,password = password)
-    if userinfo:
-        request.session["username"] = username
-        if role==0:
-            request.session["role"] = 0
-        elif role ==1:
-            request.session["role"] = 1
-        elif role == 2:
-            request.session["role"] = 2
+    if request.method == 'POST':
+        username = request.POST['username']
+        password = request.POST['password']
+        role = request.POST['role']
+        role=int(role)
+        result = {'verdict': 'ok', 'message': 'successful'}
+        userinfo = users.objects.filter(username = username,password = password)
+        if userinfo:
+            request.session["username"] = username
+            if role==0:
+                request.session["role"] = 0
+            elif role ==1:
+                request.session["role"] = 1
+            elif role == 2:
+                request.session["role"] = 2
+            else:
+              result['verdict'] = 'error'
+              result['message'] = 'Please select your role!'
         else:
-          result['verdict'] = 'error'
-          result['message'] = 'Please select your role!'
-    else:
-        result['verdict'] = 'error'
-        result['message'] = 'The Username or Password is not correct.'
-    return JsonResponse(result)
+            result['verdict'] = 'error'
+            result['message'] = 'The Username or Password is not correct.'
+        return JsonResponse(result)
 
 #登出
 def logout(request):
@@ -87,10 +91,35 @@ def logout(request):
     result = {'verdict':'ok','message':'successful'}
     return JsonResponse(result)
 
+
+'''
+POST修改面试时间
+参数
+ee_id
+time
+er_id
+pos_id
+返回
+verdict
+message
+
+GET 得到面试时间
+
+返回
+interviews:
+
+[  {    "job_title": "Google SDE",    "date":  [y,mo,d] },
+  {    "job_title": "Amazon SDE",    "date":  [y,mo,d] ]
+
+'''
+
 def interview_time(request):
-     result = {'verdict': 'ok', 'message': 'successful!'}
+    result = {'verdict': 'ok', 'message': 'successful!'}
     if request.method == 'POST':
-        interviewee_id = request.POST['ee_id']
+        username = request.session.get('username','')
+        userinfo=users.objects.filter(username =username)
+        play = play.objects.filter(user=userinfo)
+        interviewee_id=play.ee_id
         time = request.POST['time']
         interviewer_id=request.POST['er_id']
         position_id = request.POST['pos_id']
@@ -100,79 +129,117 @@ def interview_time(request):
         apply =apply.objects.filter(ee_id =interviewee_id,position_id=position_id)
         interviewinfo = interview.objects.filter(er_id=interviewer_id,ee_id =interviewee_id,status=apply.status)
         if interviewinfo:
-          //下面这一行有bug
             interviewinfo.date=time
         else:
            result['verdict'] = 'error'
            result['message'] = 'This is not correct.'
         return JsonResponse(result)
-   if request.method == 'GET':
-      interviews=[]
-      interviewee_id = request.POST['ee_id']
-      interviewee_id=int(interviewee_id)
-      applys =apply.objects.filter(ee_id =interviewee_id)
-      for apply in applys:
-        interviewinfo = interview.objects.filter(ee_id =interviewee_id,status=apply.status,er_id=apply.interviewer_id,)
-        interview["job_title"]=
-        interview["start"]=
-        interview["end"]=
-        interviews.append()
+    if request.method == 'GET':
+        interviews=[]
+        interviewee_id = request.POST['ee_id']
+        interviewee_id=int(interviewee_id)
+        applys =apply.objects.filter(ee_id =interviewee_id)
+        for apply in applys:
+          interviewinfo = interview.objects.filter(ee_id =interviewee_id,status=apply.status,er_id=apply.interviewer_id,)
+          interview["job_title"]=interviewinfo.apply.position_id.job
+          interview["date"]=interviewinfo.date
+          interviews.append(interview)
+        result['interviews']=interviews
+        return JsonResponse(result)
 
 
-
-
-
-
-
-
-
-
-
-
-
-
+@csrf_exempt
 #发布岗位
+
+
+'''
+通过
+ str(list(userinfo.values('email'))[0]['email'])
+
+ 获得 user 的email
+ 如何通过 iplay获得 hr_id这个外键
+
+'''
+
+
 def release_job(request):
     result = {'verdict':'ok','message':'successful'}
     if request.method == 'POST':
-        username = request.POST['username']
-        password = request.POST['password']
-        email = request.POST['email']
-        username = str(username)
-        password = str(password)
-        email = str(email)
-        result['email'] = email
-        result['password'] = password
-        result['username'] = username
-        #return JsonResponse(result)
-        userinfo = users.objects.filter(Q(email = email)|Q(username = username))
+        job = request.POST['job']
+        job_description = request.POST['job_description']
+        excepted_salary = request.POST['excepted_salary']
+        location=request.POST['location']
+
+        result['job'] = job
+        result['job_description'] = job_description
+        result['excepted_salary'] = excepted_salary
+        result['location'] = location
+
+        username = request.session.get('username','')
+        userinfo = users.objects.filter(username=username)
         if userinfo:
-            result['verdict'] = 'fail'
-            result['message'] = 'The email or username already exits!'
+            print( str(list(userinfo.values('email'))[0]['email']))
+            iplay=play.objects.filter(user=userinfo)
+
+''' 根据 iplay找到我们的 hr'''
+
+            position.objects.create(job=job,location=location,excepted_salary=excepted_salary,
+            job_description=job_description,hr=iplay.hr_id)
         else:
-            users.objects.create(username = username , password = password ,email = email ,friendnum = 0)
+            result['verdict'] = 'fail'
+            result['message'] = "The hr don't exits!"
         return JsonResponse(result)
 
-# 上传简历
-def upload(request):
-    if request.method == "POST":
-        inp_file = request.FILES          # 上传的文件会在request.FILES里
-        file_obj1 = inp_file.get('f1')    # 根据前端设置的name属性值获取相对应的文件
 
-        print inp_file
-        print file_obj1.name              # 获取文件名
-        print file_obj1.size
-        f = open(file_obj1.name, 'wb')    # 以获取的文件名 按‘wb’的方式打开一个文件
-        for line in file_obj1.chunks():   # chunks方法读取文件，默认每次读取64kb
-            f.write(line)
-        f.close()
-    return render(request, 'home/upload.html')
 
 
 # 返回面试状态
 def get_interview_status(request):
-    if request.method == "GET":
+    result = {'verdict':'ok','message':'successful'}
+    if request.method == 'GET':
+        interviews=[]
+        interviewee_id = request.POST['ee_id']
+        interviewee_id=int(interviewee_id)
+        applys =apply.objects.filter(ee_id =interviewee_id)
+        for apply in applys:
+          interviewinfo = interview.objects.filter(ee_id =interviewee_id,status=apply.status,er_id=apply.interviewer_id,)
+          interview["job_title"]=interviewinfo.apply.position_id.job
+          interview["date"]=interviewinfo.date
+          interviews.append(interview)
+        result['interviews']=interviews
+        return JsonResponse(result)
 
+
+
+# 申请工作
+def apply_job(request):
+    if request.method == "POST":
+      pass
+
+# 得到简历的路径
+def get_resume_url(request):
+    result = {'verdict':'ok','message':'successful'}
+    if request.method == "POST":
+       interviewee = request.POST['ee_id']
+       position = request.POST['pos_id']
+       iapply=apply.objects.filter(ee_id=interviewee,position_id=position)
+       if iapply:
+          result["resume_url"]=iapply.resume_path
+       return result
+
+
+
+
+# 得到工作信息
+def get_job_information(request):
+    result = {'verdict':'ok','message':'successful'}
+    job_list=[]
+    if request.method == "GET":
+        positions=position.objects.all()
+        for i in positions:
+          job_list.append(i.becomedict())
+        result["job_list"]=job_list
+        return JsonResponse(result)
 
 
 

@@ -28,25 +28,15 @@ from django.conf.urls import include, url
 
 
 urlpatterns = [
-    url(r'^users/$',backend_views.user),
-    url(r'^users/login/$',backend_views.login),
-    url(r'^users/logout/$',backend_views.logout),
-    url(r'^interview/time/$',backend_views.interview_time),
-    url(r'^interview/status/$',backend_views.get_interview_status),
-    url(r'^interview/resume/$',backend_views.get_resume_path),
-
-
-
-
-    url(r'^release_job/$',backend_views.release_job),
-    url(r'^apply_job/$',backend_views.apply_job),
-    url(r'^upload_resume/$',backend_views.upload_resume),
-    url(r'^resume/$',backend_views.upload_resume),
-    url(r'^arrangement_interview/$',backend_views.arrangement_interview),
-    url(r'^feedback/$',backend_views.feedback),
-
-
-
+    url(r'^users$',backend_views.user),
+    url(r'^users/login$',backend_views.login),
+    url(r'^users/logout$',backend_views.logout),
+    url(r'^interview/time$',backend_views.interview_time),
+    url(r'^interview/status$',backend_views.get_interview_status),
+    url(r'^users/apply_job$',backend_views.apply_job),
+    url(r'^interview/resume$',backend_views.get_resume_url),
+    url(r'^view_job_info$',backend_views.get_job_information),
+    url(r'^users/release_job$',backend_views.release_job),
 
 
 ]\
