@@ -25,8 +25,6 @@ from django.conf.urls import include, url
 
 
 
-
-
 urlpatterns = [
     url(r'^users$',backend_views.user),
     url(r'^users/login$',backend_views.login),

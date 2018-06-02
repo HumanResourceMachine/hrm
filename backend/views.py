@@ -12,7 +12,8 @@ from email.header import Header
 from PIL import Image
 from email.utils import formataddr
 import urllib.request
-
+import random
+import  os
 
 @csrf_exempt
 #新建用户 get用户信息
@@ -207,20 +208,26 @@ def apply_job(request):
         print ("fuck!!!!!!!!!!!!!!!!!!!")
         print (username)
 
-        userinfo = users.objects.get(username=username)
-        if userinfo:
-            x= str(random.randint(1, 20000000))
-            resume_path=os.path.join("E:\\upload", username+x)
-            iplay=play.objects.get(user=userinfo)
-            ipos=position.objects.filter(position_id=int(pos_id))
-            apply.objects.create(resume_path=resume_path,ee_id=iplay.ee_id,position_id=ipos)
 
         result = {'verdict':'error','message':'No resume!'}
         resume =request.FILES.get("resume", None)    # 获取上传的文件，如果没有文件，则默认为None
         if not resume:
             return JsonResponse(result)
+
+        userinfo = users.objects.get(username=username)
+
+
+        if userinfo:
+            x= str(random.randint(1, 20000000))
+            resume_path=os.path.join("media", username+x+resume.name)
+
+            iplay=play.objects.get(user=userinfo)
+            ipos=position.objects.get(position_id=int(pos_id))
+            apply.objects.create(resume_path=resume_path,ee_id=iplay.ee_id,position_id=ipos)
+
+
         destination = open(resume_path,'wb+')    # 打开特定的文件进行二进制的写操作
-        for chunk in myFile.chunks():      # 分块写入文件
+        for chunk in resume.chunks():      # 分块写入文件
             destination.write(chunk)
         destination.close()
 
