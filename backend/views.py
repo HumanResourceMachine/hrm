@@ -108,6 +108,9 @@ pos_id
 verdict
 message
 
+ee_id pos_id ->apply_id
+er_id  time ee_id apply_id  => interview
+
 GET 得到面试时间
 
 返回
@@ -116,41 +119,48 @@ interviews:
 [  {    "job_title": "Google SDE",    "date":  [y,mo,d] },
   {    "job_title": "Amazon SDE",    "date":  [y,mo,d] ]
 
+user  -> apply->interview
+
 '''
 
+
+@csrf_exempt
 def interview_time(request):
     result = {'verdict': 'ok', 'message': 'successful!'}
     if request.method == 'POST':
-        username = request.session.get('username','')
-        userinfo=users.objects.filter(username =username)
-        iplay = play.objects.get(user=userinfo)
-        interviewee_id=iplay.ee_id
         time = request.POST['time']
         interviewer_id=request.POST['er_id']
+        interviewee_id=request.POST['ee_id']
         position_id = request.POST['pos_id']
         interviewee_id=int(interviewee_id)
         interviewer_id=int(interviewer_id)
         position_id=int(position_id)
-        apply =apply.objects.filter(ee_id =interviewee_id,position_id=position_id)
-        interviewinfo = interview.objects.filter(er_id=interviewer_id,ee_id =interviewee_id,status=apply.status)
-        if interviewinfo:
-            interviewinfo.date=time
-        else:
-           result['verdict'] = 'error'
-           result['message'] = 'This is not correct.'
+
+        iinterviewer=interviewer.objects.get(er_id=interviewer_id)
+        iinterviewee=interviewee.objects.get(ee_id=interviewee_id)
+        iposition=position.objects.get(position_id=position_id)
+        iapply=apply.objects.get(ee_id=iinterviewee,position_id=iposition)
+
+        interview.objects.create(er_id=iinterviewer,ee_id =iinterviewee,apply_id=iapply,date=time)
         return JsonResponse(result)
+
     if request.method == 'GET':
         interviews=[]
-        interviewee_id = request.POST['ee_id']
-        interviewee_id=int(interviewee_id)
-        applys =apply.objects.filter(ee_id =interviewee_id)
-        for apply in applys:
-          interviewinfo = interview.objects.filter(ee_id =interviewee_id,status=apply.status,er_id=apply.interviewer_id,)
-          interview["job_title"]=interviewinfo.apply.position_id.job
-          interview["date"]=interviewinfo.date
-          interviews.append(interview)
+        username = request.session.get('username','')
+        userinfo = users.objects.get(username=username)
+        iplay =play.objects.get(user=userinfo)
+        print (iplay.user.username)
+        iapply=apply.objects.filter(ee_id=iplay.ee_id)
+        for iiapply in iapply:
+            iinterview=interview.objects.filter(apply_id=iiapply)
+            for iiinterview in iinterview:
+                ainterview={}
+                ainterview["job_title"]=iiinterview.apply_id.position_id.job
+                ainterview["date"]=iiinterview.date
+                interviews.append(ainterview)
         result['interviews']=interviews
         return JsonResponse(result)
+
 
 
 @csrf_exempt
@@ -189,16 +199,23 @@ def get_interview_status(request):
     result = {'verdict':'ok','message':'successful'}
     if request.method == 'GET':
         interviews=[]
-        interviewee_id = request.POST['ee_id']
-        interviewee_id=int(interviewee_id)
-        applys =apply.objects.filter(ee_id =interviewee_id)
-        for apply in applys:
-          interviewinfo = interview.objects.filter(ee_id =interviewee_id,status=apply.status,er_id=apply.interviewer_id,)
-          interview["job_title"]=interviewinfo.apply.position_id.job
-          interview["date"]=interviewinfo.date
-          interviews.append(interview)
+        username = request.session.get('username','')
+        userinfo = users.objects.get(username=username)
+        iplay =play.objects.get(user=userinfo)
+        print (iplay.user.username)
+        iapply=apply.objects.filter(ee_id=iplay.ee_id)
+        for iiapply in iapply:
+            iinterview=interview.objects.filter(apply_id=iiapply)
+            for iiinterview in iinterview:
+                ainterview={}
+                ainterview["job_title"]=iiinterview.apply_id.position_id.job
+                ainterview["status"]=iiinterview.status
+                interviews.append(ainterview)
         result['interviews']=interviews
         return JsonResponse(result)
+
+
+
 
 @csrf_exempt
 # 申请工作
@@ -206,10 +223,7 @@ def apply_job(request):
     if request.method == "POST":
         username = request.session.get('username','')
         pos_id = request.POST['pos_id']
-        print ("fuck!!!!!!!!!!!!!!!!!!!")
         print (username)
-
-
         result = {'verdict':'error','message':'No resume!'}
         resume =request.FILES.get("resume", None)    # 获取上传的文件，如果没有文件，则默认为None
         if not resume:
@@ -267,21 +281,35 @@ def get_job_information(request):
 
 
 @csrf_exempt
-
-# 得到所有申请信息
+# 所有申请者情况信息
 def applicants_list(request):
     result = {'verdict':'ok','message':'successful'}
-    data=[]
-    username = request.session.get('username','')
-    userinfo = users.objects.get(username=username)
-    if userinfo:
-        iplay=play.objects.get(user=userinfo)
+    if request.method == 'POST':
+        result["page"]="1"
+        jishuqi=0
+        rows=[]
+        jishuqi=apply.objects.all().count()
+        applys=apply.objects.all()
+        for app in applys:
+            row={}
+            row["applicant_id"]=app.ee_id.ee_id
+            row["job_id"]=app.position_id.position_id
+            iplay=play.objects.get(ee_id=app.ee_id)
+            row["interviewer"]=iplay.user.username  #面试者名字
+            row["status"]=app.status
 
-        #ee_id=interviewee.objects.get(ee_id=)
-        apply=apply.objects.get(ee_id=userinfo)
-    return JsonResponse(result)
+            iinterview=interview.objects.get(apply_id=app)
+            iplay=play.objects.get(er_id=iinterview.er_id)
+            row["name"]=iplay.user.username            #面试官名字
+            iinterview=interview.objects.get(apply_id=app)
+            row["date"]=iinterview.date  #面试时间
+            rows.append(row)
 
 
+        result["total"]=jishuqi
+        result["records"]=jishuqi
+        result["rows"]=rows
+        return JsonResponse(result)
 
 
 

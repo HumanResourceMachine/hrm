@@ -71,11 +71,13 @@ class apply(models.Model):
     ee_id=models.ForeignKey(interviewee,on_delete=models.CASCADE)
     position_id=models.ForeignKey(position,on_delete=models.CASCADE)
 
+
+
 class interview(models.Model):
     interview_id= models.AutoField(primary_key=True)
     ee_id=models.ForeignKey(interviewee,on_delete=models.CASCADE)
     er_id=models.ForeignKey(interviewer,on_delete=models.CASCADE)
     apply_id=models.ForeignKey(apply,on_delete=models.CASCADE)
-    date = models.DateTimeField(default = timezone.now)
+    date = models.CharField(max_length=50,default='?')
     feedback= models.CharField(max_length=500,default='?')
     status=models.IntegerField(default=0)
