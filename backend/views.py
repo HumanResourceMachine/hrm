@@ -96,8 +96,9 @@ def logout(request):
     return render(request, "login.html")
 
 
+
 '''
-POST修改面试时间
+POST 确定面试时间
 参数
 ee_id
 time
@@ -122,8 +123,8 @@ def interview_time(request):
     if request.method == 'POST':
         username = request.session.get('username','')
         userinfo=users.objects.filter(username =username)
-        play = play.objects.filter(user=userinfo)
-        interviewee_id=play.ee_id
+        iplay = play.objects.get(user=userinfo)
+        interviewee_id=iplay.ee_id
         time = request.POST['time']
         interviewer_id=request.POST['er_id']
         position_id = request.POST['pos_id']
@@ -199,7 +200,7 @@ def get_interview_status(request):
         result['interviews']=interviews
         return JsonResponse(result)
 
-
+@csrf_exempt
 # 申请工作
 def apply_job(request):
     if request.method == "POST":
@@ -234,17 +235,19 @@ def apply_job(request):
         return render(request, "apply_job.html")
 
 
-
+@csrf_exempt
 # 得到简历的路径
 def get_resume_url(request):
     result = {'verdict':'ok','message':'successful'}
     if request.method == "POST":
-       interviewee = request.POST['ee_id']
-       position = request.POST['pos_id']
-       iapply=apply.objects.filter(ee_id=interviewee,position_id=position)
-       if iapply:
-          result["resume_url"]=iapply.resume_path
-       return result
+        iinterviewee = request.POST['ee_id']
+        iposition = request.POST['pos_id']
+        interviewee_obj=interviewee.objects.get(ee_id=iinterviewee)
+        position_obj=position.objects.get(position_id=iposition)
+        iapply=apply.objects.get(ee_id=interviewee_obj,position_id=position_obj)
+        result["resume_url"]=iapply.resume_path
+       # print (result["resume_url"])
+        return JsonResponse(result)
 
 
 
@@ -259,6 +262,11 @@ def get_job_information(request):
           job_list.append(i.becomedict())
         result["job_list"]=job_list
         return JsonResponse(result)
+
+
+
+
+@csrf_exempt
 
 # 得到所有申请信息
 def applicants_list(request):
