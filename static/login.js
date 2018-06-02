@@ -3,7 +3,7 @@ $(function() {
     $("#submit").click(function() {
         $.ajax({
             //------------注意：url最后要改成接口文件中定义的-------------
-            url: "/test/login",
+            url: "/users/login",
             type: "POST",
             data: {
                 "username": $("#username").val(),
