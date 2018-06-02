@@ -46,12 +46,22 @@ class position(models.Model):
     def __str__(self):
     # 在Python3中使用 def __str__(self):
         return self.job
-    def _becomedict_(self):
+    def becomedict(self):
          ans={}
-         ans["job"]=job
-         ans["desc"]=job_description
+         ans["job"]=self.job
+         ans["desc"]=self.job_description
          return ans
 
+
+
+'''
+0 提交完成
+1 一面  -1 一面挂掉
+2 二面   -2  二面挂掉
+3 hr面   -3  hr面试挂掉
+4 offer
+
+'''
 class apply(models.Model):
     apply_id= models.AutoField(primary_key=True)
     resume_path=models.CharField(max_length=500,default='?')

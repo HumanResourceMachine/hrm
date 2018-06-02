@@ -71,6 +71,8 @@ def login(request):
         userinfo = users.objects.filter(username = username,password = password)
         if userinfo:
             request.session["username"] = username
+            print("FUCK!!!!!!!!!!!!!!!!!!!!!!")
+            print (request.session["username"])
             if role==0:
                 request.session["role"] = 0
             elif role ==1:
@@ -81,6 +83,7 @@ def login(request):
               result['verdict'] = 'error'
               result['message'] = 'Please select your role!'
         else:
+            print ("login error!")
             result['verdict'] = 'error'
             result['message'] = 'The Username or Password is not correct.'
         return JsonResponse(result)
@@ -196,11 +199,32 @@ def get_interview_status(request):
         return JsonResponse(result)
 
 
-
 # 申请工作
 def apply_job(request):
     if request.method == "POST":
-      pass
+        username = request.session.get('username','')
+        pos_id = request.POST['pos_id']
+        print ("fuck!!!!!!!!!!!!!!!!!!!")
+        print (username)
+
+        userinfo = users.objects.get(username=username)
+        if userinfo:
+            x= str(random.randint(1, 20000000))
+            resume_path=os.path.join("E:\\upload", username+x)
+            iplay=play.objects.get(user=userinfo)
+            ipos=position.objects.filter(position_id=int(pos_id))
+            apply.objects.create(resume_path=resume_path,ee_id=iplay.ee_id,position_id=ipos)
+
+        result = {'verdict':'error','message':'No resume!'}
+        resume =request.FILES.get("resume", None)    # 获取上传的文件，如果没有文件，则默认为None
+        if not resume:
+            return JsonResponse(result)
+        destination = open(resume_path,'wb+')    # 打开特定的文件进行二进制的写操作
+        for chunk in myFile.chunks():      # 分块写入文件
+            destination.write(chunk)
+        destination.close()
+
+        return render(request, "apply_job.html")
 
 
 
@@ -228,6 +252,20 @@ def get_job_information(request):
           job_list.append(i.becomedict())
         result["job_list"]=job_list
         return JsonResponse(result)
+
+# 得到所有申请信息
+def applicants_list(request):
+    result = {'verdict':'ok','message':'successful'}
+    data=[]
+    username = request.session.get('username','')
+    userinfo = users.objects.get(username=username)
+    if userinfo:
+        iplay=play.objects.get(user=userinfo)
+
+        #ee_id=interviewee.objects.get(ee_id=)
+        apply=apply.objects.get(ee_id=userinfo)
+    return JsonResponse(result)
+
 
 
 

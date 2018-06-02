@@ -35,8 +35,14 @@ urlpatterns = [
     url(r'^interview/status$',backend_views.get_interview_status),
     url(r'^users/apply_job$',backend_views.apply_job),
     url(r'^interview/resume$',backend_views.get_resume_url),
-    url(r'^view_job_info$',backend_views.get_job_information),
+    url(r'^users/view_job_info$',backend_views.get_job_information),
     url(r'^users/release_job$',backend_views.release_job),
+
+
+    url(r'^/view_applicants_list/applicants_list$',backend_views.applicants_list),
+
+
+
 
 
 ]\
