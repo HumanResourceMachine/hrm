@@ -100,7 +100,7 @@ $(function() {
             },
      */
     $.ajax({
-        url: "/test/interview/time",
+        url: "/interview/time",
         type: "GET",
         success: function(data) {
             data = data["interviews"];

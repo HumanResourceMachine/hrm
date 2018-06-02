@@ -41,7 +41,7 @@ function init() {
 $(function() {
     $("#job-list").empty();
     $.ajax({
-        url: "/test/interview/status",
+        url: "/interview/status",
         type: "GET",
         success: function(data) {
             data = data["interviews"];

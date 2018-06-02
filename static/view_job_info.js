@@ -28,7 +28,7 @@
 $(function() {
     $.ajax({
         //--------注意：url要改为测试，最后要改为接口中定义的--------------
-        url: "/view_job_info",
+        url: "/users/view_job_info",
         type: "GET",
 
         success: function(data) {

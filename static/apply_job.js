@@ -2,7 +2,7 @@ $(function() {
     alert('ok');
     $("#submit").click(function() {
         $.ajax({
-            url: "/test/login",
+            url: "/users/apply_job",
             type: "POST",
             data: {
                 "username": $("#username").val(),
