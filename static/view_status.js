@@ -26,10 +26,10 @@ function init() {
     myDiagram.model = new go.GraphLinksModel(
         [
             { key: "Resume Submitted", color: "lightgreen" },
-            { key: "1st Technical Phone Interview", color: "lightgreen" },
-            { key: "2nd Technical Phone Interview", color: "lightgreen" },
-            { key: "Hiring Committee Review", color: "red" },
-            { key: "Offer Stage", color: "white" }
+            { key: "1st Technical Phone Interview", color: "lightgrey" },
+            { key: "2nd Technical Phone Interview", color: "lightgrey" },
+            { key: "Hiring Committee Review", color: "lightgrey" },
+            { key: "Offer Stage", color: "lightgrey" }
         ],
         [
             { from: "Resume Submitted", to: "1st Technical Phone Interview" },
@@ -50,6 +50,9 @@ $(function() {
                 console.log(job);
                 $("#job-list").append($("<option></option>").html(job["job_title"]));
             }
+
+            $("#job-list").append($("<option></option>").html("Amazon SDE"));
+            $("#job-list").append($("<option></option>").html("Google SDE"));
         }
     });
     init();

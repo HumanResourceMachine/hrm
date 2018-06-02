@@ -3,32 +3,33 @@
 {% block title %}View Applicants{% endblock %}
 
 {% block stylesheets %}
-   <!-- DataTables -->
-  <link rel="stylesheet" href="/static/plugins/datatables/dataTables.bootstrap4.css">
-      <!-- bootstrap datepicker -->
-  <link rel="stylesheet" href="/static/plugins/datepicker/datepicker3.css">
+    <!-- DataTables -->
+    <link rel="stylesheet" href="/static/plugins/datatables/dataTables.bootstrap4.css">
+    <!-- bootstrap datepicker -->
+    <link rel="stylesheet" href="/static/plugins/datepicker/datepicker3.css">
 
 {% endblock %}
 
 {% block scripts %}
     <!-- date picker -->
-<script src="/static/plugins/datepicker/bootstrap-datepicker.js"></script>
+    <script src="/static/plugins/datepicker/bootstrap-datepicker.js"></script>
     <!-- DataTables -->
-<script src="/static/plugins/datatables/jquery.dataTables.js"></script>
-<script src="/static/plugins/datatables/dataTables.bootstrap4.js"></script>
+    <script src="/static/plugins/datatables/jquery.dataTables.js"></script>
+    <script src="/static/plugins/datatables/dataTables.bootstrap4.js"></script>
+    <script src="/static/plugins/pdfobject.min.js"></script>
     <script type="text/template">
         <tr>
             <td><a href="http://www.baidu.com">{name}</a></td>
             <td>
                 <select id="status">
-                  <option value ="0">Submitted</option>
-                  <option value ="1">First Interview</option>
-                  <option value ="2">Second Interview</option>
-                  <option value ="3">HR Interview</option>
-                  <option value ="4">Accepted</option>
-                  <option value ="-1">Failed First Interview</option>
-                  <option value ="-2">Failed Second Interview</option>
-                  <option value ="-3">Failed HR Interview</option>
+                    <option value ="0">Submitted</option>
+                    <option value ="1">First Interview</option>
+                    <option value ="2">Second Interview</option>
+                    <option value ="3">HR Interview</option>
+                    <option value ="4">Accepted</option>
+                    <option value ="-1">Failed First Interview</option>
+                    <option value ="-2">Failed Second Interview</option>
+                    <option value ="-3">Failed HR Interview</option>
                 </select>
             </td>
             <td>
@@ -38,8 +39,13 @@
                 <input type="text" value="{date}" class="interview_date"/>
             </td>
             <td>
+                <a class="btn btn-sm"  data-toggle="modal" data-target="#resumeModal">
+                    <i class="fa fa-file-pdf-o"></i> Resume
+                </a>
+            </td>
+            <td>
                 <a class="btn btn-sm">
-                  <i class="fa fa-save"></i> Save
+                    <i class="fa fa-save"></i> Save
                 </a>
             </td>
             <td>
@@ -53,7 +59,7 @@
     </script>
 
     <script>
-    function formatTemplate(dta, tmpl) {
+        function formatTemplate(dta, tmpl) {
             var format = {
                 name: function(x) {
                     return x ;
@@ -64,77 +70,77 @@
                     return "";
                 return (format && format[m2]) ? format[m2](dta[m2]) : dta[m2];
             });
-    }
-    $(document).ready(
-
-        function () {
-            $.ajax({
-                url: '/view_applicants_list/applicants_list',
-                type: 'post',
-                data:"",
-                cache: false,
-                dataType: "json",
-                success: function(dta) {
-                    if (!dta || !dta.rows || dta.rows.length <= 0) {
-                        return;
-                    }
-
-                    //获取模板上的HTML
-                    var html = $('script[type="text/template"]').html();
-                    //定义一个数组，用来接收格式化合的数据
-                    var arr = [];
-                    //对数据进行遍历
-                    $.each(dta.rows, function(i, o) {
-                        //这里取到o就是上面rows数组中的值, formatTemplate是最开始定义的方法.
-                        var tmp = $(html);
-                        //console.log(o);
-                        tmp.find("option[value=" + o["status"] + "]").attr("selected", "selected");
-                        //console.log(tmp[0]);
-                        //html.replace("value =\""+3+"\"", "value =\""+3+"\""+selected = "selected")
-                        arr.push(formatTemplate(o, tmp[0].outerHTML));
-                    });
-                    //最后把数组化成字符串，并添加到table中去。
-                    $('#applicants_table').children('tbody').append(arr.join(''));
-
-                    $('#applicants_table').DataTable({
-                      "paging": true,
-                      "lengthChange": false,
-                      "searching": true,
-                      "ordering": true,
-                      "info": true,
-                      "autoWidth": false,
-                        "columnDefs":[
-
-                            {
-                                "targets":[6],
-                                "bVisible": false,
-                                "bSearchable": false
-                            },
-                            {
-                                "targets":[7],
-                                "bVisible": false,
-                                "bSearchable": false
-                            }
-                        ]
-                    });
-                $('.interview_date').each(function(e){
-                    //console.log(this);
-                    $(this).datepicker({
-	                 autoclose: true,
-                    format : "yyyy-mm-dd"
-	                });
-                });
-                /*
-                 $('#interview_date').datepicker({
-	                 autoclose: true,
-                    format : "yyyy-mm-dd"
-	                });
-                */
-                }
-            });
-
         }
-    );
+        $(document).ready(
+            function () {
+                PDFObject.embed("/media/test.pdf", "#resume");
+                $.ajax({
+                    url: '/test/view_applicants_list/applicants_list',
+                    type: 'post',
+                    data:"",
+                    cache: false,
+                    dataType: "json",
+                    success: function(dta) {
+                        if (!dta || !dta.rows || dta.rows.length <= 0) {
+                            return;
+                        }
+
+                        //获取模板上的HTML
+                        var html = $('script[type="text/template"]').html();
+                        //定义一个数组，用来接收格式化合的数据
+                        var arr = [];
+                        //对数据进行遍历
+                        $.each(dta.rows, function(i, o) {
+                            //这里取到o就是上面rows数组中的值, formatTemplate是最开始定义的方法.
+                            var tmp = $(html);
+                            //console.log(o);
+                            tmp.find("option[value=" + o["status"] + "]").attr("selected", "selected");
+                            //console.log(tmp[0]);
+                            //html.replace("value =\""+3+"\"", "value =\""+3+"\""+selected = "selected")
+                            arr.push(formatTemplate(o, tmp[0].outerHTML));
+                        });
+                        //最后把数组化成字符串，并添加到table中去。
+                        $('#applicants_table').children('tbody').append(arr.join(''));
+
+                        $('#applicants_table').DataTable({
+                            "paging": true,
+                            "lengthChange": false,
+                            "searching": true,
+                            "ordering": true,
+                            "info": true,
+                            "autoWidth": false,
+                            "columnDefs":[
+
+                                {
+                                    "targets":[6],
+                                    "bVisible": false,
+                                    "bSearchable": false
+                                },
+                                {
+                                    "targets":[7],
+                                    "bVisible": false,
+                                    "bSearchable": false
+                                }
+                            ]
+                        });
+                        $('.interview_date').each(function(e){
+                            //console.log(this);
+                            $(this).datepicker({
+                                autoclose: true,
+                                format : "yyyy-mm-dd"
+                            });
+                        });
+                        /*
+                         $('#interview_date').datepicker({
+                             autoclose: true,
+                            format : "yyyy-mm-dd"
+                            });
+                        */
+                    }
+                });
+
+            }
+        );
 
     </script>
 {% endblock %}
@@ -143,30 +149,54 @@
 
 {% block container %}
 
-      <div class="container-fluid">
+    <div class="modal fade bd-example-modal-lg" id="resumeModal" tabindex="-1" role="dialog"  aria-hidden="true" width="800px">
+        <div class="modal-dialog modal-lg" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLabel">Resume</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                        <div class="container-fluid">
+                            <div class="row">
+                                <div class="col-md-12" style="height:700px;" id="resume"></div>
+                            </div>
+                        </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="container-fluid">
         <div class="row">
             <div class="card card-primary card-outline">
-            <div class="card-body">
-              <table id="applicants_table" class="table table-bordered table-hover">
-                <thead>
-                <tr>
-                  <th>Applicants Name</th>
-                  <th>Status</th>
-                  <th>Interviewer</th>
-                  <th>Interview Time</th>
-                  <th>Update</th>
-                  <th>Delete</th>
-                    <th>applicant_id</th>
-                    <th>job_id</th>
-                </tr>
-                </thead>
-                <tbody>
-                </tbody>
-              </table>
+                <div class="card-body">
+                    <table id="applicants_table" class="table table-bordered table-hover">
+                        <thead>
+                        <tr>
+                            <th>Applicants Name</th>
+                            <th>Status</th>
+                            <th>Interviewer</th>
+                            <th>Interview Time</th>
+                            <th>Resume</th>
+                            <th>Update</th>
+                            <th>Delete</th>
+                            <th>applicant_id</th>
+                            <th>job_id</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        </tbody>
+                    </table>
+                </div>
             </div>
-            </div>
-          <!-- /.col-md-6 -->
+            <!-- /.col-md-6 -->
         </div>
         <!-- /.row -->
-      </div><!-- /.container-fluid -->
+    </div><!-- /.container-fluid -->
 {% endblock %}

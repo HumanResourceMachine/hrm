@@ -100,7 +100,7 @@ $(function() {
             },
      */
     $.ajax({
-        url: "/interview/time",
+        url: "/test/interview/time",
         type: "GET",
         success: function(data) {
             data = data["interviews"];
@@ -109,8 +109,7 @@ $(function() {
                 var event = {};
                 event["title"] = data[i]["job_title"];
                 var date = data[i]["date"];
-                console.log(date);
-                event["start"] = new Date(date[0], date[1], date[2]);
+                event["start"] = new Date(date);
                 event["backgroundColor"] = '#3c8dbc';
                 event["allDay"] = true;
                 time.push(event);

@@ -24,20 +24,18 @@ def interview_time(request):
             "interviews":[
                 {
                     "job_title": "Google SDE",
-                    "date": [
-                        2018,
-                        6,
-                        3
-                    ]
+                    "date": "2018-06-03"
                 },
                 {
                     "job_title": "Amazon SDE",
-                    "date": [
-                        2018,
-                        6,
-                        20
-                    ]
-                }
+                    "date":"2018-06-20"
+                },{
+                    "job_title": "HP SDE",
+                    "date":"2018-06-25"
+                },{
+                    "job_title": "Airbnb SDE",
+                    "date":"2018-06-07"
+                },
             ]
         }
     else:
