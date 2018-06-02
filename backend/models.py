@@ -15,18 +15,18 @@ class interviewer(models.Model):
     er_id= models.AutoField(primary_key=True)
     def __str__(self):
     # 在Python3中使用 def __str__(self):
-        return self.er_id
+        return str(self.er_id)
 
 class interviewee(models.Model):
     ee_id = models.AutoField(primary_key=True)
     def __str__(self):
     # 在Python3中使用 def __str__(self):
-        return self.ee_id
+        return str(self.ee_id)
 class hr(models.Model):
     hr_id= models.AutoField(primary_key=True)
     def __str__(self):
     # 在Python3中使用 def __str__(self):
-        return self.hr_id
+        return str(self.hr_id)
 
 class play(models.Model):
     play_id= models.AutoField(primary_key=True)

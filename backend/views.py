@@ -150,18 +150,6 @@ def interview_time(request):
 
 @csrf_exempt
 #发布岗位
-
-
-'''
-通过
- str(list(userinfo.values('email'))[0]['email'])
-
- 获得 user 的email
- 如何通过 iplay获得 hr_id这个外键
-
-'''
-
-
 def release_job(request):
     result = {'verdict':'ok','message':'successful'}
     if request.method == 'POST':
@@ -176,13 +164,11 @@ def release_job(request):
         result['location'] = location
 
         username = request.session.get('username','')
-        userinfo = users.objects.filter(username=username)
+        userinfo = users.objects.get(username=username)
         if userinfo:
-            print( str(list(userinfo.values('email'))[0]['email']))
-            iplay=play.objects.filter(user=userinfo)
-
-''' 根据 iplay找到我们的 hr'''
-
+            print( userinfo.email)
+            iplay=play.objects.get(user=userinfo)
+            print (iplay.hr_id)
             position.objects.create(job=job,location=location,excepted_salary=excepted_salary,
             job_description=job_description,hr=iplay.hr_id)
         else:
@@ -215,6 +201,8 @@ def get_interview_status(request):
 def apply_job(request):
     if request.method == "POST":
       pass
+
+
 
 # 得到简历的路径
 def get_resume_url(request):
