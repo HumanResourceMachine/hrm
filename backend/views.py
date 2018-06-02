@@ -53,7 +53,7 @@ def user(request):
         if userinfo:
             result['username'] = username
             result['email'] = str(list(userinfo.values('email'))[0]['email'])
-            result['role'] = request.session["role"]
+            result['role'] = str(request.session["role"])
             #result['avatar'] = '/media/'+str(list(userinfo.values('avatar'))[0]['avatar'])
         else:
             result['verdict'] = 'error'
@@ -93,7 +93,7 @@ def login(request):
 def logout(request):
     del request.session["username"]
     result = {'verdict':'ok','message':'successful'}
-    return JsonResponse(result)
+    return render(request, "login.html")
 
 
 '''
