@@ -18,6 +18,7 @@
               <div class="card-body">
 
                   <form class="form-horizontal" target="/users/release_job" method="post">
+                      {% csrf_token %}
                   <div class="form-group">
                     <label for="job" class="col-sm-2 control-label">Job</label>
 
