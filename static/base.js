@@ -1,6 +1,6 @@
 $(function() {
     $.ajax({
-        url: "/test/users",
+        url: "/users",
         type: "GET",
         success: function(data) {
             $("#navbar"+data["role"]).css("display", "block");
