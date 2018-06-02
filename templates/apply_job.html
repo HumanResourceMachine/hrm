@@ -46,13 +46,13 @@
                 <p class="lead">Apply</p>
                 <form role="form" action="/users/apply_job" method="POST" enctype="multipart/form-data">
                     {% csrf_token %}
-                    <input style="display:none" name="pos_id" id="pos_id" value="2">
+                    <input style="display:none" name="pos_id" id="pos_id" value="3">
                     <div class="form-group">
-                        <label for="direction">Disired Direction:</label>
+                        <label for="direction">Desired Direction:</label>
                         <input type="text" class="form-control" id="direction" name="direction"/>
                     </div>
                     <div class="form-group">
-                        <label for="resume">Disired Direction:</label>
+                        <label for="resume">Resume File</label>
                         <input type="file" name="resume" id="resume" class="form-control">
                     </div>
                     <button type="submit" class="btn btn-primary">Submit</button>
